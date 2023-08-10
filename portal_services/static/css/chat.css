@@ -1,0 +1,458 @@
+:root{
+    --primary: #00838d;
+    --secondary: #daad86;
+    --third: #00838d;
+    --gray: #f2f8f9;
+}
+
+body{
+    font-family: mukta, serif ;
+}
+
+a{
+    transition: 0.5s;
+}
+
+a:hover{
+    color: var(--secondary);
+    transition: 0.5s;
+    cursor: pointer;
+}
+
+/*
+Font
+*/
+@font-face {
+    font-family: mukta;
+    src: url("../font/Mukta-Regular.ttf");
+}
+
+/***
+****** General ******
+***/
+#main{
+    height: 100vh;
+    padding: 0;
+    display: flex;
+}
+
+.one-page{
+    height: 100vh;
+}
+
+.font-colorful{
+    color: var(--secondary);
+}
+
+/* scrollbar */
+::-webkit-scrollbar-track
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar
+{
+    width: 10px;
+    background-color: #FFFFFF;
+}
+
+::-webkit-scrollbar-thumb
+{
+    background-color: blueviolet;
+}
+
+/***
+****** Specific ******
+***/
+#main{
+    /*background: rgb(92,161,126);*/
+    /*background: linear-gradient(90deg, rgba(92,161,126,1) 0%, rgba(65,179,163,1) 33%);*/
+    background-image: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+}
+/*** Left sidebar ***/
+#left-sidebar{
+  background-color: #212529;
+
+    color: blueviolet;
+    position: relative;
+    padding: 0;
+    width: 13%;
+/*用gpt的宽260px / 整个屏幕1540px 得 16.9%    */
+}
+
+.brand{
+    padding-top: 56px;
+}
+
+.brand-logo{
+    width: 100%;
+    /*margin-bottom: 15px;*/
+}
+
+.brand-title{
+    font-weight: bold;
+    font-size: 30px;
+}
+
+#conversation-history {
+  max-height: 350px; /* set the maximum height of the container */
+  overflow-y: auto; /* show vertical scroll bar if the content exceeds the maximum height */
+  padding-top: 0;
+  margin-bottom: 100px;
+}
+
+i[onclick^="single_history_delete"] {
+  cursor: pointer;
+}
+/*i[onclick^="single_history_delete"]:hover {*/
+/*  background-color: rgb(211, 238, 221);*/
+/*}*/
+
+/*.history-opts-link {*/
+/*  display: flex;*/
+/*  flex-direction: row;*/
+/*  align-items: center;*/
+/*  white-space: nowrap; !* prevent text from wrapping *!*/
+/*  overflow-x: hidden; !* hide horizontal overflow *!*/
+/*  text-overflow: ellipsis; !* add an ellipsis to indicate that the text is truncated *!*/
+/*  padding: 5px 10px;*/
+/*  color: #333;*/
+/*}*/
+.history-opts-link{
+    margin-left: 2%;
+    /*设置文本为白色*/
+    color: rgb(236, 236, 241);
+    width: 100%;
+    /*设置边框圆弧*/
+    border-radius: 5px;
+}
+
+a{
+    text-decoration: none;
+
+}
+
+.history-opts-link:hover {
+    background-color: #6d6e75;
+  color: #000;
+}
+
+
+.history-opts-link .bi {
+  font-size: 1rem;
+}
+
+.option-text {
+  margin-left: 10px;
+    font-size: 1rem;
+}
+
+.conversation-opts{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding-bottom: 20px;
+}
+
+
+.conversation-opts-link{
+    font-size: 30px;
+    color: blueviolet;
+}
+
+/*** Content ***/
+#content{
+    padding: 0;
+    transition: 0.5s;
+    overflow: hidden;
+    position: relative;
+    z-index: 0;
+    flex: 1;
+}
+
+#chat_container{
+    position: relative;
+}
+
+/* Conversation dialog */
+.conversation-wrapper {
+    height: 100vh;
+    width: 100%;
+    padding-top: 40px;
+    overflow: auto;
+    padding-bottom: 80px;
+}
+
+.conversation-dialog {
+    min-height: 100px;
+    width: 80%;
+    margin: 20px auto;
+    display: flex;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* 修改阴影效果 */
+    padding: 20px;
+    border-radius: 10px;
+    position: relative; /* 添加相对定位，为内部图标提供定位参考 */
+}
+
+.dialog-portrait {
+    width: 80px;
+    margin-right: 20px;
+    text-align: center;
+    padding-top: 5px;
+}
+
+.dialog-portrait-name {
+    color: whitesmoke;
+    font-weight: bold;
+    margin: 0;
+}
+
+.dialog-portrait-img {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.dialog-msg-wrapper {
+    padding: 10px;
+    width: 100%;
+
+}
+
+.dialog-user .dialog-msg-wrapper {
+    display: flex;
+    align-items: flex-start;
+}
+
+.dialog-user .dialog-msg-container {
+    margin-left: auto;
+    padding: 10px;
+    background-color: transparent;
+    border-radius: 6px;
+    text-align: left;
+}
+
+.dialog-msg {
+    color: black;
+    padding: 10px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    border-radius: 6px;
+    display: table;
+    white-space: pre-wrap;
+    background: #aea7fd;
+    position: relative; /* 添加相对定位 */
+}
+
+/* 用户为淡蓝色，其他不变 */
+.dialog-user .dialog-msg {
+    background: #b8e1ff;
+}
+
+.dialog-msg::before {
+    content: "";
+    position: absolute;
+    top: 50%; /* 设置箭头位置垂直居中 */
+    left: -10px; /* 设置箭头位置偏移 */
+    transform: translateY(-50%); /* 将箭头向上偏移自身高度的一半 */
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 10px solid #aea7fd; /* 设置箭头颜色 */
+}
+
+.dialog-msg br {
+    display: block;
+    content: "";
+}
+
+.dialog-user .dialog-portrait {
+    margin-left: auto;
+    margin-right: 20px;
+}
+
+.dialog-user .dialog-msg::before {
+    left: auto;
+    right: -10px;
+    border-right: none;
+    border-left: 10px solid #b8e1ff;
+}
+
+.icon-container {
+    position: absolute;
+    bottom: 10px;
+    width: 95%; /* 设置 icon-container 盒子的宽度为固定值 */
+    display: flex;
+    justify-content: space-between; /* 图标之间的间隔相等 */
+}
+
+.icon-container img {
+    width: 20px;
+    height: 20px;
+}
+
+.delete-icon {
+    order: 2; /* 修改图标显示顺序，将删除图标排在后面 */
+}
+
+.like-count {
+    margin-left: 5px; /* 设置点赞数量和图标之间的间距 */
+    font-size: 14px;
+    color: #555;
+}
+
+/* Input bar */
+.input-wrapper{
+    width: 100%;
+    height: 100px;
+    /*padding-top: 20px;*/
+    position: absolute;
+    bottom: 0;
+}
+
+.input-msg{
+    width: 55%;
+    margin: auto;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: 5px;
+}
+
+.btn-msg{
+    background: blueviolet;
+    transition: 0.5s;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-msg:hover{
+    /*background: #00838d80;*/
+    color: white;
+}
+
+
+/* result page */
+#result_container{
+    padding: 30px;
+}
+
+#result_display{
+    background: whitesmoke;
+    height: 100%;
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 0 10px 0 rgba(0,0,0,0.45) inset;
+    padding: 10px;
+}
+
+.res-code{
+    overflow-y: auto;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.history {
+  white-space: nowrap; /* 设置文本不换行 */
+  overflow: hidden; /* 设置内容溢出隐藏 */
+  height: 40%;
+    margin-top: 2%;
+    margin-left: 4%;
+    margin-right: 4%;
+    padding: 2%;
+        /*盒子边界*/
+    border: 1px solid rgb(236, 236, 241);
+    /*设置边框圆弧*/
+    border-radius: 0.6rem;
+
+}
+
+.user-center {
+    white-space: nowrap; /* 设置文本不换行 */
+    overflow: hidden; /* 设置内容溢出隐藏 */
+    /*内容垂直水平居中*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /*盒子边界*/
+    border: 1px solid rgb(236, 236, 241);
+    /*设置边框圆弧*/
+    border-radius: 0.6rem;
+    margin-top: 2%;
+}
+
+.user-center:hover{
+    /*overflow: visible;*/
+    background-color: #6d6e75;
+    color: #000;
+}
+
+
+.user-center i{
+    font-size: 1.2rem;
+    color: rgb(236, 236, 241);
+}
+
+
+.user-phone{
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: rgb(236, 236, 241);
+    margin-right: 5px;
+}
+
+.new-chat{
+    /*内容垂直水平居中*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    color: rgb(236, 236, 241);
+    /*盒子边界*/
+    border: 1px solid rgb(236, 236, 241);
+    /*设置边框圆弧*/
+    border-radius: 0.6rem;
+}
+
+#user-setting-modal{ /*设置弹出框*/
+    position: fixed;
+    /*整个页面的中心点*/
+    top: 20%;
+}
+
+.modal-dialog{
+    color: black;
+}
+
+#tokens{
+    color: red;
+}
+
+
+/*用户账单的模态框tr标签，在js中动态生成*/
+.bill-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.bill-table th, .bill-table td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #dddddd;
+}
+
+.bill-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.one-day:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.one-day:hover {
+  background-color: #ebebeb;
+}
+
+

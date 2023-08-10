@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ chineseName }}——用户评论区</title>
+    <link rel="icon" type="image/svg+xml" href="../static/images/icon/Portal_logo.png">
+    <!-- bootstrap -->
+    <link href="../static/css/v5.2.3_bootstrap.min.css" rel="stylesheet">
+    <script src="../static/js/bootstrap.bundle.min.js" ></script>
+    <script src="../static/js/socket.io.min.js"></script>
+    <!-- jquery -->
+    <script src="../static/js/jquery.min.js"></script>
+    <!-- icons -->
+
+    <!-- self -->
+    <link rel="stylesheet" href="../static/css/chat.css">
+    <style>
+    .brand {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: nowrap;
+        flex-direction: column;
+    }
+
+    .brand-logo {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .brand h3, .brand h4 {
+        color: #ffffff;
+        margin: 0;
+        text-align: center;
+    }
+</style>
+</head>
+
+<body id="{{ role_id }}">
+{% include 'component_navigationBar.html' %}
+<main id="main" class="container-fluid">
+    <!-- *** Left sidebar *** -->
+    <div id="left-sidebar">
+        <!-- Brand -->
+        <div class="text-center brand">
+            <img src="{{ url_for('static', filename='images/role/' + role_id + '.png') }}" class="brand-logo" alt="角色图片">
+            <h3 id="chineseName">{{ chineseName }}</h3>
+            <h4>——用户评论</h4>
+        </div>
+
+
+        <!-- Conversation options -->
+        <div class="conversation-opts container">
+            <div class="user-center new-chat">
+
+            <a class="conversation-opts-link" onclick="CommentToChat(role_id)" data-bs-toggle="tooltip" title="返回聊天">
+                <span class="user-phone">Bact to Chat</span>
+            </a>
+
+            </div>
+            <div class="user-center">
+                <a id="user-setting" class="conversation-opts-link" data-bs-toggle="tooltip" data-bs-placement="top" title="用户设置">
+                    <i class="bi bi-list"><img src="../static/images/icon/list.svg"></i>
+                    <span class="user-phone" id="userName">{{ username }}</span>
+                </a>
+            </div>
+        </div>
+
+    {% include 'component_modal.html' %}
+    </div>
+    <!-- *** Chat page *** -->
+    <div id="content" class="container-fluid">
+        <div class="row">
+            <!-- *** Chat page *** -->
+            <div id="chat_container" class="col-12">
+                <!-- conversation -->
+                <div id="conv-0" class="conversation-wrapper">
+
+
+                </div>
+                <!-- Input bar -->
+                <div class="input-wrapper">
+                    <form id="msgForm">
+                        <div class="input-group input-msg">
+                            <textarea required id="msgInput" name="message"  class="form-control" placeholder="enter发送评论，shift+enter换行；语音功能请使用Microsoft Edge浏览器" style="height: 3rem;"></textarea>
+                            <a class="btn btn-msg" onclick="query_conversion_comment();" data-bs-toggle="tooltip" title="Send a message"><i class="bi bi-send-fill"><img src="../static/images/icon/send-fill.svg" alt="发送"> </i></a>
+                            <a class="btn btn-msg" id="startRecording" data-bs-toggle="tooltip" title="Send a message"><i class="bi bi-send-fill" id="speak_i"><img src="../static/images/icon/mic.svg" alt="发送"></i></a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script src="../static/js/comment.js"></script>
+<script>
+    $(document).ready(function () {
+    $.ajax({
+        url: "/comments/show",
+        type: 'post',
+        data:{
+            "role": role_id,
+        },
+        success: function (res){
+            document.getElementById('conv-0').innerHTML = '';
+            res = JSON.parse(res)
+            let comment = res.comments
+            let length = comment.length
+            {#如果长度为0，则”暂无评论“#}
+            if (length === 0) {
+                $('.conversation-wrapper').append(noComment());
+            {#标记一个特殊值以便后续操作#}
+                $('.conversation-wrapper').data('specialValue', 'noComment');
+            }
+            for (let i = 0; i < length; i++)
+            {
+                if (comment[i].user === '{{ username }}'){
+                    console.log(comment[i])
+                    $('.conversation-wrapper').append(generateCommentSelf(comment[i].user,comment[i].comment,comment[i].likes));
+                }
+
+                else{
+                    console.log(comment[i])
+                    $('.conversation-wrapper').append(generateComment(comment[i].user,comment[i].comment,comment[i].likes));
+                }
+            }
+            $('.conversation-wrapper').animate({
+                scrollTop: $('.conversation-wrapper').prop('scrollHeight')
+            }, 500)
+        },
+        error: function (){
+            console.log("error")
+        }
+    })
+    });
+</script>
+</body>
+</html>
+

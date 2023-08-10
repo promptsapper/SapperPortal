@@ -1,0 +1,21 @@
+    <h1>角色使用次数统计</h1>
+<table>
+    <thead>
+            <tr>
+                <th style="width: 50%">角色</th>
+                <th>次数</th>
+            </tr>
+        </thead>
+</table>
+<div class="show_count">
+    <table>
+        <tbody>
+            {% for role in count %}
+            <tr>
+                <td style="width: 50%">{{ role.role }}</td>
+                <td>{{ role.count}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

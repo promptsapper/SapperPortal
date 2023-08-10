@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/svg+xml" href="../static/images/icon/Portal_logo.png">
+    <title>Sapper Portal</title>
+    <link rel="stylesheet" href="../static/css/v5.2.3_bootstrap.min.css">
+
+<style>
+    body{
+        background: url("../static/images/admin_bg.png");
+        background-size: cover;
+    }
+    form{
+        color: whitesmoke;
+        width: 300px;
+        height: 300px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-left: -150px;
+        margin-top: -150px;
+        background: rgba(0,0,0,0.3);
+        padding: 20px;
+        border-radius: 10px;
+    }
+    form input{
+        margin-top: 20px;
+    }
+    form button{
+        margin-top: 20px;
+    }
+</style>
+</head>
+<body>
+<form method="post" action="/adminCheck">
+  <div class="form-group">
+    <label for="exampleInputEmail1">Username</label>
+    <input name="username" type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Password</label>
+    <input name="password" type="password" class="form-control" id="exampleInputPassword1">
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+    <p style="color: red;">{{error}}</p>
+</form>
+</body>
+</html>

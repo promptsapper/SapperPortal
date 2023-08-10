@@ -1,0 +1,45 @@
+body{
+	padding-top: 7%;
+            background: rgb(92,161,126);
+            background: linear-gradient(90deg, rgba(92,161,126,1) 0%, rgba(65,179,163,1) 33%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+		label {
+			display: block;
+			margin-bottom: 10px;
+		}
+		/*让input type="checkbox"的input复选框成为行内元素*/
+		input[type="checkbox"] {
+			display: inline-block;
+			width: 18px;
+			height: 18px;
+			vertical-align: middle;
+		}
+		input {
+			display: block;
+			margin-bottom: 10px;
+			padding: 5px;
+			border-radius: 5px;
+			border: 1px solid #ccc;
+			width: 200px;
+			box-sizing: border-box;
+		}
+		button {
+			padding: 5px 10px;
+			border-radius: 5px;
+			border: none;
+			background-color: #007bff;
+			color: #fff;
+			cursor: pointer;
+
+		}
+		.error {
+			color: red;
+			margin-bottom: 10px;
+		}
+		.success {
+			color: green;
+			margin-bottom: 10px;
+		}

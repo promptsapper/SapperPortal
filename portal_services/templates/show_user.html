@@ -1,0 +1,28 @@
+    <h1>用户列表</h1>
+<table>
+<thead>
+            <tr>
+                <th style="width: 38%">用户名</th>
+                <th style="width: 13%">密码</th>
+                <th style="width: 17%">可用次数</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+</table>
+<div class="show_user">
+    <table>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td id="user">{{ user.user }}</td>
+                <td id="password">{{ user.password }}</td>
+                <td id="tokens">{{ user.tokens }}</td>
+                <td>
+                    <button class="edit">编辑</button>
+                    <a href="/del_user/{{ user.user }}"><button>删除</button></a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,33 @@
+    <h1>奖励统计</h1>
+<table>
+    <thead>
+            <tr>
+                <th style="width: 12%;text-align: center;">用户</th>
+                <th style="width: 18%;text-align: center;">角色</th>
+                <th style="width: 15%;text-align: center;">未兑换钱的使用次数</th>
+                <th style="width: 15%;text-align: center;">已兑换钱的使用次数</th>
+                <th>用户已获得的钱</th>
+                <th>该次兑换钱的次数</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+</table>
+<div class="show_rewards">
+    <table>
+        <tbody>
+            {% for key, values in rewards.items() %}
+            {% for item in values %}
+                <tr>
+                    <td id="username"><input value="{{ key }}"></td>
+                    <td id="role"><input value="{{ item.role }}"></td>
+                    <td id="count"><input value="{{ item.count }}"></td>
+                    <td id="count_to_money"><input value="{{ item.count_to_money }}"></td>
+                    <td id="reward_money"><input value="{{ item.reward_money }}"></td>
+                    <td id="exchange_count"><input></td>
+                    <td><button class="edit_rewards">提交</button></td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

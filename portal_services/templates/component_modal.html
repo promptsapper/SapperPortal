@@ -1,0 +1,39 @@
+<div class="modal fade" id="user-setting-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">用户: {{ username }}</h5>
+      </div>
+      <div class="modal-body">
+            您剩余的提问次数为:
+          <span id="tokens"></span> 次
+      </div>
+      <div class="modal-footer">
+          <a href="/user_login_out"><button type="button" class="btn btn-dark">退出登录</button></a>
+        <button type="button" class="btn btn-secondary" id="close-modal" data-dismiss="modal">关闭</button>
+          <button type="button" class="btn btn-secondary" id="show-bill" data-dismiss="modal">账单</button>
+        <a href="/recharge"><button type="button" class="btn btn-primary">充值</button></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="user-bill"  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">使用记录</h5>
+          <input type="text" id="searchInput" placeholder="请输入搜索关键字">
+<button onclick="searchBill()">搜索</button>
+      </div>
+
+      <div class="modal-body" id="bill">
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="close-bill-modal" data-dismiss="modal">关闭</button>
+      </div>
+    </div>
+  </div>
+</div>

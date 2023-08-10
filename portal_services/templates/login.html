@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" type="image/svg+xml" href="../static/images/icon/Portal_logo.png">
+    <title>Sapper Portal</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="robots" content="all,follow">
+    <link rel="stylesheet" href="../static/css/v5.2.3_bootstrap.min.css" />
+
+    <link rel="stylesheet" href="../static/css/style.default.css" id="theme-stylesheet">
+  </head>
+  <body>
+   {% include 'navigationBar2.html' %}
+    <div class="page login-page">
+      <div class="container d-flex align-items-center">
+        <div class="form-holder has-shadow">
+          <div class="row">
+            <!-- Logo & Information Panel-->
+            <div class="col-lg-6">
+              <div class="info d-flex align-items-center">
+                <div class="content">
+                  <div class="logo">
+                    <h1>Welcome to log in</h1>
+                  </div>
+                  <p></p>
+                </div>
+              </div>
+            </div>
+            <!-- Form Panel    -->
+            <div class="col-lg-6 bg-white">
+              <div class="form d-flex align-items-center">
+                <div class="content">
+                  {% if register %}
+                   <form method="post" action="/register" class="form-validate" id="registerForm">
+                        <div class="form-group">
+                            <input id="register-username" type="text" name="userName" required data-msg="your username" placeholder="phone number" class="input-material" value="{{ reg_username }}">
+                        </div>
+                        <div class="form-group">
+                            <input id="register-password" type="password" name="passWord" required data-msg="your password" placeholder="password" class="input-material" value="{{ reg_password }}">
+                        </div>
+                       <div class="form-group">
+                            <input id="code" type="text" name="code" required data-msg="Verification code" placeholder="Verification code" class="input-material">
+                        </div>
+                        <button id="verification-code"  class="btn btn-primary">Send verification code</button>
+                        <button id="register" type="submit" class="btn btn-primary">register</button>
+                        <span style="color: red;">{{ error }}</span>
+                    </form>
+                      <small>Already have an account?</small><a href="/return_login" class="signup" style="font-size: large;">&nbsp;Login</a>
+                   {% else %}
+                  <form method="post" action="/login" class="form-validate" id="loginFrom">
+                    <div class="form-group">
+                      <input id="login-username" type="text" name="userName" required data-msg="your username" placeholder="username" value="{{ username }}" class="input-material">
+                    </div>
+                    <div class="form-group">
+                      <input id="login-password" type="password" name="passWord" required data-msg="password" placeholder="password" value="{{ password }}" class="input-material">
+                    </div>
+                    <button id="login" type="submit" class="btn btn-primary">Login</button>
+                    <span style="color: red;">{{ error }}</span>
+                  </form>
+                  <br/>
+                  <small>Don't have an account?</small><a href="/lg_register" class="signup" style="font-size: large;">&nbsp;Register</a>
+                    {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- JavaScript files-->
+    <script src="../static/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="https://www.jq22.com/jquery/jquery-1.10.2.js"></script>
+    <!-- Main File-->
+    <script src="../static/js/login.js"></script>
+  </body>
+</html>

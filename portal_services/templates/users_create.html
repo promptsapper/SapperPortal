@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/svg+xml" href="../static/images/icon/Portal_logo.png">
+    <title>Sapper Portal</title>
+    <script src="../static/js/jquery.min.js"></script>
+    <script src="../static/js/bootstrap.bundle.min.js" ></script>
+    <link rel="stylesheet" href="../static/css/v5.2.3_bootstrap.min.css" />
+
+<style>
+    body::before{
+            display: block;
+            content: '';
+            height: 56px;
+        }
+    body {
+    background-color: #f5f5f5;
+    font-family: Arial, sans-serif;
+    }
+    form {
+    margin: 50px auto;
+    width: 50%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    input[type=file],
+    input[type=text],
+    select, textarea{
+    display: block;
+    margin-bottom: 20px;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    color: #333;
+    }
+    input[type=submit], .view_roles{
+    background-color: #4CAF50;
+    color: #fff;
+    font-size: 16px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    }
+    input[type=submit]:hover, .view_roles:hover{
+    background-color: #3e8e41;
+    }
+    ::placeholder {
+    color: #ccc;
+    }
+    p {
+        font-size: 16px;
+        color: #333;
+        line-height: 1.5;
+        margin-bottom: 10px;
+        align-content: center;
+    }
+    ol {
+        font-size: 16px;
+        color: #333;
+        line-height: 1.5;
+        margin-bottom: 10px;
+    }
+</style>
+</head>
+<body>
+{% include 'component_navigationBar.html' %}
+
+
+ <form id="add_role_form" action="/user_add_role" method="POST" enctype="multipart/form-data">
+     <p>填写规则如下：</p>
+<ol>
+    <li>'选择文件'：上传一张图片作为AI的头像</li>
+    <li>AI 名字：为AI起一个名字</li>
+    <li>AI 分类：点击选择AI所属分类</li>
+    <li>AI 介绍：告诉使用者，AI的功能是什么，如何使用。</li>
+    <li>生成AI设定词：编写AI的系统设定词</li>
+</ol>
+     <input type="file" id="file" name="file">
+    <input type="text" name="chineseName" placeholder="2.AI 名字：为AI起一个名字">
+     <select class="form-select" id="sel1" name="category">
+          <option>general</option>
+          <option>entertainment</option>
+          <option>counselor</option>
+          <option>efficiency</option>
+          <option>education</option>
+    </select>
+     <textarea name="helloWord" placeholder="4.AI 介绍：能为用户做什么，用户如何使用。" rows="2"></textarea>
+    <textarea name="prompt" type="text" placeholder="AI设定词" id="spl_prompt"></textarea>
+    <br>
+    <input type="submit" value="添加">
+     <button class="view_roles" type="button" id="view_roles">查看自己的角色</button>
+     <span style="color: red">{{ error }}{{ success }}{{ status }}{{ statement }}</span>
+    </form>
+
+<div class="modal" id="role_status"  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">角色使用明细</h5>
+      </div>
+
+      <div class="modal-body" id="status">
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="close-status-modal" data-dismiss="modal">关闭</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+    $(document).ready(function(){
+        // 绑定事件view_roles
+        $('#view_roles').click(function(){
+            // 显示模态框
+            $('#role_status').modal('show');
+            // 发送ajax请求，url:/user_view_own_roles
+            $.ajax({
+                url: '/user_view_own_roles',
+                type: 'POST',
+                success: function(data){ // data或者为“NULL”或者是一个元组：[{"role": "test","count": 10,"count_to_money": 200,"reward_money": 5}，{"role": "abc","count": 10,"count_to_money": 200,"reward_money": 5}]
+                    // 清空模态框
+                    $('#status').empty();
+                    if (data === 'NULL'){
+                        $('#status').append('<p>您还没有创建过角色</p>');
+                    }else{
+                        // 遍历data
+                        $.each(data, function(index, item){ // $.each 遍历(索引,元素)
+                        // 将item添加到模态框中
+                        $('#status').append('<p>角色：'+item.role+'</p><p>未兑换奖励的使用次数：'+item.count+'</p><p>已兑换奖励的使用次数：'+item.count_to_money+'</p><p>已盈利：'+item.reward_money+'元</p><hr>');
+                        });
+                    }
+                }
+            });
+        });
+        $('#close-status-modal').click(function(){
+            $('#role_status').modal('hide');
+        });
+
+
+
+        // 绑定事件add_role_form,提交前判断四个input是否为空，为空则阻止提交
+        $('#add_role_form').submit(function(){
+            // 获取四个input的值
+            var file = $('#file').val();
+            var role = $('input[name="role"]').val();
+            var Chinese = $('input[name="Chinese"]').val();
+            var prompt = $('input[name="prompt"]').val();
+            // 判断是否为空
+            if (file === '' || role === '' || Chinese === '' || prompt === ''){
+                alert('请确保所有字段都填写完整后，点击“添加”按钮提交表单。');
+                return false;
+            }
+        });
+    });
+</script>
+</body>
+</html>
+
+

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ chineseName }}</title>
+    <link rel="icon" type="image/svg+xml" href="../static/images/icon/Portal_logo.png">
+    <!-- bootstrap -->
+    <link href="../static/css/v5.2.3_bootstrap.min.css" rel="stylesheet">
+    <script src="../static/js/bootstrap.bundle.min.js" ></script>
+    <script src="../static/js/socket.io.min.js"></script>
+    <!-- jquery -->
+    <script src="../static/js/jquery.min.js"></script>
+    <!-- icons -->
+
+    <!-- self -->
+    <link rel="stylesheet" href="../static/css/chat.css">
+</head>
+
+<body id="{{ role_id }}">
+{% include 'component_navigationBar.html' %}
+<main id="main" class="container-fluid">
+    <!-- *** Left sidebar *** -->
+    <div id="left-sidebar">
+        <!-- Brand -->
+        <div class="text-center brand">
+            <img src="{{ url_for('static', filename='images/role/' + role_id + '.png') }}" class="brand-logo" alt="AI_picture">
+        </div>
+        <!-- Chat history -->
+        <div id="conversation-history" class="conversation-opts-container">
+
+
+
+        </div>
+
+        <!-- Conversation options -->
+        <div class="conversation-opts container">
+            <div class="user-center">
+                <a id="user-comment" onclick="redirectToComment(role_id)" class="conversation-opts-link" data-bs-toggle="tooltip" title="Go to Comment">
+                    <span class="user-phone">Go to Comment</span>
+                </a>
+            </div>
+            <div class="user-center new-chat">
+            <a class="conversation-opts-link" onclick="new_chat();" data-bs-toggle="tooltip" title="New Chat">
+                <span class="user-phone">New Chat</span>
+                <i class="bi bi-plus-lg"><img src="../static/images/icon/plus-lg.svg" ></i>
+            </a>
+
+            </div>
+            <!--<div class="user-center">-->
+            <!--    <a id="user-setting" class="conversation-opts-link" data-bs-toggle="tooltip" data-bs-placement="top" title="user_setting">-->
+            <!--        <i class="bi bi-list"><img src="../static/images/icon/list.svg"></i>-->
+            <!--        <span class="user-phone">{{ username }}</span>-->
+            <!--    </a>-->
+            <!--</div>-->
+        </div>
+
+    {% include 'component_modal.html' %}
+    </div>
+    <!-- *** Chat page *** -->
+    <div id="content" class="container-fluid">
+        <div class="row">
+            <!-- *** Chat page *** -->
+            <div id="chat_container" class="col-12">
+                <!-- conversation -->
+                <div id="conv-0" class="conversation-wrapper">
+
+                    <div class="conversation-dialog dialog-assistant" data-role="assistant">
+                        <div class="dialog-portrait">
+                            <img src="../static/images/role/{{ role_id }}.png" class="dialog-portrait-img" alt="">
+                            <p class="dialog-portrait-name" id="chineseName">{{ chineseName }}
+                            </p>
+                        </div>
+                        <div class="dialog-msg-wrapper">
+                            <p class="dialog-msg" id="helloWord">{{ helloWord }}</p>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- Input bar -->
+                <div class="input-wrapper">
+                    <form id="msgForm">
+                        <div class="input-group input-msg">
+                            <textarea required id="msgInput" name="message"  class="form-control" placeholder="Send a message" style="height: 3rem;"></textarea>
+                            <a class="btn btn-msg" onclick="query_conversion();" data-bs-toggle="tooltip" title="Send a message"><i class="bi bi-send-fill"><img src="../static/images/icon/send-fill.svg" alt="send"> </i></a>
+                            <a class="btn btn-msg" id="startRecording" data-bs-toggle="tooltip" title="Send a message"><i class="bi bi-send-fill" id="speak_i"><img src="../static/images/icon/mic.svg" alt="speak"></i></a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script src="../static/js/chat.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>创作</title>
+    <script src="../static/js/jquery.min.js"></script>
+    <script src="../static/js/bootstrap.bundle.min.js" ></script>
+    <link rel="stylesheet" href="../static/css/v5.2.3_bootstrap.min.css" />
+</head>
+<style>
+    body::before{
+            display: block;
+            content: '';
+            height: 56px;
+        }
+    body {
+    background-color: #f5f5f5;
+    font-family: Arial, sans-serif;
+    }
+    form {
+    margin: 50px auto;
+    width: 50%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    input[type=file],
+    input[type=text] {
+    display: block;
+    margin-bottom: 20px;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    color: #333;
+    }
+    input[type=submit], .view_roles{
+    background-color: blueviolet;
+    color: #fff;
+    font-size: 16px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    }
+    input[type=submit]:hover, .view_roles:hover{
+    background-color: blueviolet;
+    }
+    ::placeholder {
+    color: #ccc;
+    }
+    p {
+        font-size: 16px;
+        color: #333;
+        line-height: 1.5;
+        margin-bottom: 10px;
+        align-content: center;
+    }
+    ol {
+        font-size: 16px;
+        color: #333;
+        line-height: 1.5;
+        margin-bottom: 10px;
+    }
+</style>
+<body>
+{% include 'component_navigationBar.html' %}
+
+
+ <form id="add_role_form" action="/user_add_spl_role" method="POST" enctype="multipart/form-data">
+     <p>填写规则如下：</p>
+<ol>
+    <li>'选择文件'(上传图片)如:translate.png</li>
+    <li>角色名字(字母)：请输入角色的英文名字(如:translate)。</li>
+    <li>角色名字(汉语)：请输入角色的中文名字(如:翻译官)。</li>
+    <li style="color: red">您必须在Structured Sapper创建prompt才能创建角色！<a href="https://www.aichain.store:3000/BuildPrompt" target="_blank">Structured Sapper</a></li>
+</ol>
+<p>请确保所有字段都填写完整后，点击“添加”按钮提交表单。</p>
+     <input type="file" id="file" name="file">
+    <input type="text" name="role" placeholder="角色名字(字母)">
+    <input type="text" name="Chinese" placeholder="角色名字(汉语)">
+    <input type="text" name="prompt" placeholder="角色prompt" id="spl_prompt" value="{{ spl_prompt }}">
+     <input type="hidden" name="spl_id" id="spl_id" value="{{ spl_id }}">
+    <br>
+    <input type="submit" value="添加">
+     <button class="view_roles" type="button" id="edit_spl_roles">编辑Sapper Spl角色</button>
+     <span style="color: red">{{ error }}{{ success }}{{ status }}{{ statement }}</span>
+    </form>
+
+
+<div class="modal" id="spl_roles"  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">编辑Sapper Spl角色</h5>
+      </div>
+
+      <div class="modal-body" id="spl_roles_status">
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="close-spl-status-modal" data-dismiss="modal">关闭</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+<script>
+    $(document).ready(function(){
+        // 绑定事件edit_spl_roles
+        $('#edit_spl_roles').click(function(){
+            // 显示模态框
+            $('#spl_roles').modal('show');
+            // 发送ajax请求，url:/user_view_own_roles
+            $.ajax({
+                url: '/user_view_spl_roles',
+                type: 'POST',
+                success: function(data) { // data或者为“NULL”或者是{"3124124": {"spl_prompt": "nihfas", "spl_data": "fasfa","username": "18270182496", "role": "zwx"},"31241234": {"spl_prompt": "nihfas","spl_data": "fasfa","username": "18270182496", "role": "qwe"}}
+                    // 清空模态框
+                    $('#spl_roles_status').empty();
+                    if (data === 'NULL') {
+                        $('#spl_roles_status').append('<p>您还没有创建过Sapper Spl角色或者您的作品还在审核！<br><a href="">Sapper Spl</p>');
+                    } else {
+                        // 遍历data
+                        $.each(data, function (index, item) { // $.each 遍历(索引,元素)
+                            // 将item添加到模态框中
+                            $('#spl_roles_status').append('<p>角色：' + item.role + '</p><a href="https://www.aichain.store:3000/BuildPrompt?SPLId=' + index + '" target="_blank">前往Sapper Spl编辑</a><hr>');
+                        });
+                    }
+                }
+            });
+        });
+        $('#close-spl-status-modal').click(function(){
+            $('#spl_roles').modal('hide');
+        });
+
+
+        // 绑定事件add_role_form,提交前判断四个input是否为空，为空则阻止提交
+        $('#add_role_form').submit(function(){
+            // 获取四个input的值
+            var file = $('#file').val();
+            var role = $('input[name="role"]').val();
+            var Chinese = $('input[name="Chinese"]').val();
+            var prompt = $('input[name="prompt"]').val();
+            // 判断是否为空
+            if (file === '' || role === '' || Chinese === '' || prompt === ''){
+                alert('请确保所有字段都填写完整后，点击“添加”按钮提交表单。');
+                return false;
+            }
+        });
+
+
+        // 给从sapper过来的用户填充表单
+        var spl_prompt = $('#spl_prompt').val();
+        // 获取id为spl_id的input的value
+        var spl_id = $('#spl_id').val();
+        //console.log(spl_prompt);
+        //console.log(spl_id);
+        // 如果spl_prompt和spl_id不为空，就存入local storage
+        if (spl_prompt !== '' && spl_id !== '' && spl_prompt !== null && spl_id !== null && spl_prompt !== undefined && spl_id !== undefined){
+            localStorage.setItem('spl_prompt', spl_prompt);
+            localStorage.setItem('spl_id', spl_id);
+            console.log(spl_prompt);
+        console.log(spl_id);
+        }else{
+            // 如果spl_prompt和spl_id为空，就从local storage中取出
+            spl_prompt = localStorage.getItem('spl_prompt');
+            spl_id = localStorage.getItem('spl_id');
+            console.log(spl_prompt);
+        console.log(spl_id);
+            // 如果spl_prompt和spl_id不为空，就存入input
+            if (spl_prompt !== '' && spl_id !== '' && spl_prompt !== null && spl_id !== null){
+                $('#spl_prompt').val(spl_prompt);
+                $('#spl_id').val(spl_id);
+            }
+        }
+    });
+</script>
+</html>
+
+

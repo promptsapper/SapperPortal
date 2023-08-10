@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link rel="icon" type="image/svg+xml" href="../static/images/icon/Portal_logo.png">
+<title>Sapper Portal</title>
+<link href="../static/css/v5.2.3_bootstrap.min.css" rel="stylesheet"/>
+<link href="../static/css/base.css" rel="stylesheet">
+<link href="../static/css/roleSelection.css" rel="stylesheet">
+<script src="../static/js/jquery.min.js"></script>
+</head>
+<body style="background-image: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);">
+<link href="../static/css/nav.css" rel="stylesheet">
+<style>
+    body::before{
+            display: block;
+            content: '';
+            height: 6px;
+        }
+    .page-link:hover {
+      cursor: pointer;
+    }
+:root {
+  --lightgray: white;
+}
+
+#category button {
+  border: none;
+  display: block;
+  position: relative;
+  padding: 0.7em 2.4em;
+  font-size: 18px;
+  background: transparent;
+  cursor: pointer;
+  user-select: none;
+  overflow: hidden;
+  color: royalblue;
+  z-index: 1;
+  font-family: inherit;
+  font-weight: 500;
+}
+
+#category button span {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  z-index: -1;
+  border: 4px solid royalblue;
+}
+
+#category button span::before {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 8%;
+  height: 500%;
+  background: var(--lightgray);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-60deg);
+  transition: all 0.3s;
+}
+
+#category button:hover span::before {
+  transform: translate(-50%, -50%) rotate(-90deg);
+  width: 100%;
+  background: royalblue;
+}
+
+#category button:hover {
+  color: white;
+}
+
+#category button:active span::before {
+  background: #2751cd;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+}
+
+.wave-group {
+  position: relative;
+}
+
+.wave-group .input {
+  font-size: 16px;
+  padding: 10px 10px 10px 5px;
+  {#display: block;#}
+    display: inline-block;
+  width: 148px;
+  border: none;
+  border-bottom: 1px solid #515151;
+  background: transparent;
+}
+
+.wave-group .input:focus {
+  outline: none;
+}
+
+.wave-group .label {
+  color: #999;
+  font-size: 18px;
+  font-weight: normal;
+  position: absolute;
+  pointer-events: none;
+  left: 5px;
+  top: 10px;
+  display: flex;
+}
+
+.wave-group .label-char {
+  transition: 0.2s ease all;
+  transition-delay: calc(var(--index) * .05s);
+}
+
+.wave-group .input:focus ~ label .label-char,
+.wave-group .input:valid ~ label .label-char {
+  transform: translateY(-20px);
+  font-size: 14px;
+  color: #5264AE;
+}
+
+.wave-group .bar {
+  position: relative;
+  display: block;
+  width: 148px;
+}
+
+.wave-group .bar:before,.wave-group .bar:after {
+  content: '';
+  height: 2px;
+  width: 0;
+  bottom: 1px;
+  position: absolute;
+  background: #5264AE;
+  transition: 0.2s ease all;
+  -moz-transition: 0.2s ease all;
+  -webkit-transition: 0.2s ease all;
+}
+
+.wave-group .bar:before {
+  left: 50%;
+}
+
+.wave-group .bar:after {
+  right: 50%;
+}
+
+.wave-group .input:focus ~ .bar:before,
+.wave-group .input:focus ~ .bar:after {
+  width: 50%;
+}
+
+
+.button {
+ display: inline-block;
+ border-radius: 7px;
+ border: none;
+ background: #1875FF;
+ color: white;
+ font-family: inherit;
+ text-align: center;
+ font-size: 13px;
+ box-shadow: 0px 14px 56px -11px #1875FF;
+ width: 10em;
+ padding: 1em;
+ transition: all 0.4s;
+ cursor: pointer;
+    margin-left: 10px;
+}
+
+.button span {
+ cursor: pointer;
+ display: inline-block;
+ position: relative;
+ transition: 0.4s;
+}
+
+.button span:after {
+ content: 'AI服务';
+ position: absolute;
+ opacity: 0;
+ top: 0;
+ right: -20px;
+ transition: 0.7s;
+}
+
+.button:hover span {
+ padding-right: 3.55em;
+}
+
+.button:hover span:after {
+ opacity: 4;
+ right: 0;
+}
+
+#page-list li:hover{
+    cursor: pointer;
+}
+
+</style>
+{% if login_status == False %}
+    {% include 'navigationBar2.html' %}
+{% elif login_status == True %}
+    {% include 'component_navigationBar.html' %}
+{% endif %}
+    <div id="top" class="h90"></div>
+    <div  class="Frame Wrap">
+
+
+
+        <div class="search" style="margin-top: 25px;">
+
+            <div class="wave-group">
+          <input required="" type="text" class="input" id="searchInput">
+          <span class="bar"></span>
+          <label class="label">
+            <span class="label-char" style="--index: 0">N</span>
+            <span class="label-char" style="--index: 1">a</span>
+            <span class="label-char" style="--index: 2">m</span>
+            <span class="label-char" style="--index: 3">e</span>
+          </label>
+        </div>
+            <button class="button" onclick="searchRole()" style="vertical-align:middle"><span>Search</span></button>
+
+
+
+        </div>
+        <ul class="pagination" id="category" style="margin-top: 10px;">
+              <li class="page-item" ><a class="page-link" id="all"><button>ALL<span></span></button></a></li>
+              <li class="page-item" ><a class="page-link" id="general" ><button>General<span></span></button></a></li>
+              <li class="page-item"><a class="page-link" id="entertainment"><button>Entertainment<span></span></button></a></li>
+              <li class="page-item"><a class="page-link" id="efficiency"><button>Efficiency<span></span></button></a></li>
+              <li class="page-item"><a class="page-link" id="counselor"><button>Counselors<span></span></button></a></li>
+                <li class="page-item"><a class="page-link" id="education"><button>Education<span></span></button></a></li>
+            </ul>
+		<div class="cb"></div>
+	<div class="cb"></div>
+	<div class="Line"></div>
+
+     <div class="Frame">
+
+		<div class="Tutor">
+			<ul class="role-list">
+
+                <li>
+						<a href="/select/english">
+							<img src="../static/images/role/poet.png">
+							<h2>chinese</h2>
+						</a>
+                </li>
+
+			</ul>
+			<div class="cb"></div>
+
+    </div>
+         <div class="pagination-controls">
+             <ul class="breadcrumb justify-content-center" style="margin:20px 0" id="page-list">
+
+            </ul>
+         </div>
+	</div>
+
+</div>
+
+<div id="back-to-top"><a href="#top" style="font-size: 1.5rem;">↑</a></div>
+<script>
+	//返回顶部
+	$(document).ready(function () { // 当页面加载完成之后才会执行此函数
+        //首先将#back-to-top隐藏
+        $("#back-to-top").hide();
+        //当滚动条的位置处于距顶部100像素以下时，跳转链接出现，否则消失
+        $(function () {
+            $(window).scroll(function () {
+                if ($(window).scrollTop() > 100) {
+                    $("#back-to-top").fadeIn(1500);
+                }
+                else {
+                    $("#back-to-top").fadeOut(1500);
+                }
+            });
+            //当点击跳转链接后，回到页面顶部位置
+            $("#back-to-top").click(function () {
+                $('body,html').animate({ scrollTop: 0 }, 1000);
+                return false;
+            });
+        });
+
+        // 先展示general类别的AI
+        $.ajax({
+            url:"/select/show",
+            type:"POST",
+            data:{"category": "all"},
+            success:function(data){
+                // data = {'virtualBoyfriend': '虚拟男友', 'virtualGirlfriend': '虚拟女友'}
+                // localStorage.setItem("role_list",JSON.stringify(data));
+                $(".role-list").empty();
+                var sum_role = 0;
+                for(var key in data){
+                    sum_role += 1;
+                    if (sum_role < 9){
+                    generate_li(key,data[key]);
+                    }
+                }
+                var sum_page = Math.ceil(sum_role / 8);
+                $("#page-list").empty();
+                for(var i = 1;i <= sum_page;i++){
+                    var li = $("<li class='breadcrumb-item' id='page-"+i+"'><a>Page "+i+" </a></li>");
+                    // 为每个li绑定一个点击事件，点击之后，展示对应的AI，0-8，8-16，16-24
+                    li.click(function(){
+                        // 设置当前页的样式
+                        $("#page-list li").removeClass("active");
+                        $(this).addClass("active");
+                        var page = $(this).attr("id").split("-")[1];
+                        var start = (page - 1) * 8;
+                        var end = page * 8;
+                        $(".role-list").empty();
+                        for(var key in data){
+                            if (start <= 0 && end > 0){
+                                generate_li(key,data[key]);
+                            }
+                            start -= 1;
+                            end -= 1;
+                        }
+                    });
+
+                    $("#page-list").append(li);
+                }
+            },
+            error:function(){
+                alert("error");
+            }
+        });
+    });
+    // 写一个函数generate_li(english,chinese);
+    // 传入两个参数，一个是角色的英文名，一个是角色的中文名
+    // 生成一个li标签:
+    // <li>
+	//					<a href="/select/english">
+	//						<img src="../static/images/role/english.png">
+	//						<h2>chinese</h2>
+	//					</a>
+	//				</li>
+    function generate_li(english,chinese){
+        var li = $("<li></li>");
+        var a = $("<a></a>");
+        var img = $("<img>");
+        var h2 = $("<h2></h2>");
+        img.attr("src","../static/images/role/"+english+".png");
+        h2.text(chinese);
+        a.attr("href","/select/"+english);
+        a.append(img);
+        a.append(h2);
+        li.append(a);
+        $(".role-list").append(li);
+    }
+
+    // 为category中的每个li标签绑定点击事件，点击后，获取当前li标签下a的id，然后向后端发送数据{"category":id}，后端返回包含角色名的字典“{"wanneng": "万能助手", "wannengdaoshi": "万能导师", "translator": "翻译官"}”,前端接收后，依次遍历，调用generate_li函数，生成角色列表;如果报错，弹出错误信息
+    $("#category li").click(function(){
+        var id = $(this).children("a").attr("id");
+        console.log(id)
+        $.ajax({
+            url:"/select/show",
+            type:"POST",
+            data:{"category":id},
+            success:function(data){
+                $(".role-list").empty();
+                var sum_role = 0;
+                for(var key in data){
+                    sum_role += 1;
+                    if (sum_role < 9){
+                        generate_li(key,data[key]);
+                    }
+                }
+                var sum_page = Math.ceil(sum_role / 8);
+                $("#page-list").empty();
+                for(var i = 1;i <= sum_page;i++){
+                    var li = $("<li class='breadcrumb-item' id='page-"+i+"'><a>Page "+i+" </a></li>");
+                    // 为每个li绑定一个点击事件，点击之后，展示对应的AI，0-8，8-16，16-24
+                    li.click(function(){
+                        // 设置当前页的样式
+                        $("#page-list li").removeClass("active");
+                        $(this).addClass("active");
+                        var page = $(this).attr("id").split("-")[1];
+                        var start = (page - 1) * 8;
+                        var end = page * 8;
+                        $(".role-list").empty();
+                        for(var key in data){
+                            if (start <= 0 && end > 0){
+                                generate_li(key,data[key]);
+                            }
+                            start -= 1;
+                            end -= 1;
+                        }
+                    });
+                    $("#page-list").append(li);
+                }
+            },
+            error:function(){
+                alert("error");
+            }
+        });
+     })
+
+
+
+    function searchRole() {
+      var input = document.getElementById('searchInput').value; // 获取搜索框中的输入值
+      var roles = document.querySelectorAll('.role-list li'); // 获取所有角色列表项
+
+      for (var i = 0; i < roles.length; i++) {
+        var role = roles[i];
+        var roleName = role.querySelector('h2').innerText; // 获取角色名
+
+        if(roleName.includes(input)) { // 判断角色名是否包含搜索关键字
+          role.style.display = 'block'; // 显示匹配的列表项
+        } else {
+          role.style.display = 'none'; // 隐藏未匹配的列表项
+        }
+      }
+    }
+    
+</script>
+<script src="../static/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+</body>
+</html>

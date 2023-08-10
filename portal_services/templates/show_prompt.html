@@ -1,0 +1,26 @@
+<h1>prompt列表</h1>
+<table>
+    <thead>
+            <tr>
+                <th style="width: 8%">角色名</th>
+                <th>system_prompt</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+</table>
+<div class="show_prompt">
+    <table>
+        <tbody>
+            {% for key, value in prompt.items() %}
+            <tr>
+                <td>{{ value.chineseName }}</td>
+                <td id="prompt">{{ value.prompt|replace("\n", "----") }}</td>
+                <td>
+                    <button class="delete_role" value="{{ key }}">删除</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<a href="/add_role" class="btn btn-primary" style="color: red">添加角色</a>

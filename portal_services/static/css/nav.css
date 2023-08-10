@@ -1,0 +1,111 @@
+.menu-container {
+	float: none;
+}
+.menu-mobile {
+    display: none;
+    padding: 20px;
+}
+
+.menu > ul {
+    float: right; width: 650px;
+}
+
+.menu > ul:before,
+.menu > ul:after {
+    content: "";
+    display: table;
+}
+
+.menu > ul:after {
+    clear: both;
+}
+
+.menu > ul > li {
+    float: left; font-weight: 700; font-size: 16px;
+}
+
+.menu > ul > li a {
+	text-align: center;
+	line-height: 35px;
+	display: block;
+	color: #fff;
+	margin-left: 30px;
+}
+
+.menu > ul > li a.Language {
+    margin-left: 15px; font-size: 12px; font-weight: 100; background: url(../image/line.png) no-repeat left center; padding-left: 14px;
+}
+
+.menu > ul > li a.Login {
+    margin-left: 70px; font-size: 12px; font-weight: 100;
+}
+
+.menu > ul > li > ul.normal-sub {
+    width: 300px;
+    left: auto;
+    padding: 10px 20px;
+}
+
+.menu > ul > li > ul.normal-sub > li {
+    width: 100%;
+}
+
+.menu > ul > li > ul.normal-sub > li a {
+    border: 0;
+    padding: 1em 0;
+}
+
+
+/* ––––––––––––––––––––––––––––––––––––––––––––––––––
+Mobile style's
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+
+@media only screen and (max-width: 1200px) {
+    .menu-container {
+        width: 100%;
+		position: absolute;
+		top: 0px;
+		z-index: 10000;
+    }
+    .menu-mobile {
+        display: block;
+		color: #fff;
+		text-align: right;
+		margin-top: -10px;
+    }
+	.menu-mobile a {color: #fff;}
+    .menu-dropdown-icon:before {
+        display: block;
+    }
+    .menu > ul {
+        display: none;
+		margin-top: -10px;
+		width: 100%;
+    }
+    .menu > ul > li {
+		float:none;
+		width: 100%;
+		background: #3db4da;
+		border-top: #b7e5f4 1px solid;
+		font-weight: 100;
+    }
+    .menu > ul > li a {
+		text-align: left;
+		line-height: 35px;
+		display: block;
+		color: #fff;
+		margin-left: 0px;
+		font-size:12px;
+		text-indent: 2em;
+	}
+	.menu > ul > li a.Language {margin-left: 0px; background: none; padding-left: 0px;}
+	.menu > ul > li a.Login {margin-left: 0px;}
+    
+    .menu > ul > li > ul.normal-sub {
+        width: 100%;
+    }
+   
+    .menu .show-on-mobile {
+        display: block;
+    }
+}

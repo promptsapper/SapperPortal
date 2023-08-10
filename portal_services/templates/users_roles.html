@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sapper Portal</title>
+    <link rel="icon" type="image/svg+xml" href="../static/images/icon/Portal_logo.png">
+    <link rel="stylesheet" href="../static/css/v5.2.3_bootstrap.min.css" />
+    <script src="../static/js/bootstrap.bundle.min.js" ></script>
+    <style>
+        body::before{
+            display: block;
+            content: '';
+            height: 56px;
+        }
+        .rounded{
+            width: 150px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+        h5{
+            margin-top: 10px;
+        }
+        .card-body {
+            padding: 20px;
+        }
+
+        .info-label {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        button{
+            margin-top: 10px;
+        }
+        a{
+            color: white;
+
+        }
+        pre {
+            background-color: #f1f1f1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+{% include 'component_navigationBar.html' %}
+<div class="container mt-3">
+	<h2>My AI serivce</h2>
+
+
+    <div id="accordion">
+        {% if has_roles == True %}
+            {%  for key, value in spl_pass_roles.items() %}
+            <div class="card">
+                <div class="card-header">
+                    <a class="collapsed btn" data-bs-toggle="collapse" href="#collapse{{ loop.index }}">
+                    {{ value.chineseName }}
+                    </a>
+                </div>
+                 <div id="collapse{{ loop.index }}" class="collapse" data-bs-parent="#accordion">
+                    <div class="card-body">
+
+                        <div class="info-label">AI avatar：</div>
+                            <img decoding="async" src="../static/images/role/{{ value.role_id }}.png" class="rounded" alt="Cinque Terre">
+                            <div class="info-label">AI category：<mark>{{ value.category }}</mark></div>
+                            <div>
+                                <button type="button" class="btn btn-dark info-label" data-bs-toggle="collapse" data-bs-target="#helloWord">Click to display AI self-introduction</button>
+                                <div id="helloWord" class="collapse">
+                                    <pre>{{ value.helloWord }}</pre>
+                                </div>
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-dark info-label" data-bs-toggle="collapse" data-bs-target="#SplPrompt">Click on the display AI setting word Prompt</button>
+                                <div id="SplPrompt" class="collapse">
+                                    <pre>{{ value.spl_prompt }}</pre>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-danger"><a href="https://www.promptsapper.tech/sappercommunity/workspace?SPLId={{ key }}" target="_blank">Click Edit AI Prompt</a></button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {%  else %}
+        <div class="card-header"><pre>You have not yet passed the audit AI, you can go <a href="https://www.promptsapper.tech/sappercommunity/workspace" target="_blank" style="color: red">Prompt Sapper</a> create a AI service.</pre></div>
+        {% endif %}
+    </div>
+</div>
+
+
+</body>
+</html>

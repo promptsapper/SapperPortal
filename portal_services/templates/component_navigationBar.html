@@ -1,0 +1,53 @@
+<nav class="navbar navbar-expand-lg bg-dark navbar-dark fixed-top">
+    <div class="container">
+        <a href="/" class="navbar-brand">Sapper Portal</a>
+
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navmenu"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navmenu">
+            <ul class="navbar-nav ms-auto">
+                <!--margin start = margin left-->
+                <!--<li class="nav-item">-->
+                <!--    <a class="nav-link" href="/roleSelect">AI原生服务</a>-->
+                <!--</li>-->
+                <!--<li class="nav-item">-->
+                    
+                    <!--<a class="nav-link" href="/create_spl_role">创建AI原生服务</a>-->
+                    
+                    <!--<div class="btn-group" role="group" aria-label="Button group with nested dropdown">-->
+                    <!--  <div class="btn-group" role="group">-->
+                    <!--    <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="color: #adb5bd;">-->
+                    <!--      创建角色-->
+                    <!--    </button>-->
+                    <!--    <ul class="dropdown-menu">-->
+                    <!--      <li><a class="dropdown-item" href="/create">创作普通角色</a></li>-->
+                    <!--      <li><a class="dropdown-item" href="/create_spl_role">创建SapperSpl角色</a></li>-->
+                    <!--    </ul>-->
+                    <!--  </div>-->
+                    <!--</div>-->
+                    
+                <!--</li>-->
+                <li class="nav-item">
+                    <a class="nav-link" href="/showMyRoles">MyAI</a>
+                </li>
+                <!--<li class="nav-item">-->
+                <!--    <a class="nav-link" href="/recharge">客服充值</a>-->
+                <!--</li>-->
+                <li class="nav-item">
+                    {% if login_status %}
+                    <a class="nav-link" href="/user_login_out">Login</a>
+                    {% else %}
+                    <a class="nav-link" href="/login">Logout</a>
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

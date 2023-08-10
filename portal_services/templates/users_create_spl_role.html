@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/svg+xml" href="../static/images/icon/Portal_logo.png">
+    <title>Sapper Portal</title>
+    <script src="../static/js/jquery.min.js"></script>
+    <script src="../static/js/bootstrap.bundle.min.js" ></script>
+    <link rel="stylesheet" href="../static/css/v5.2.3_bootstrap.min.css" />
+
+<style>
+    body::before{
+            display: block;
+            content: '';
+        }
+    body {
+    background-color: #f5f5f5;
+    font-family: Arial, sans-serif;
+    }
+    form {
+    margin: 50px auto;
+    width: 90%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    input[type=file],
+    input[type=text],
+    textarea,select{
+    display: block;
+    margin-bottom: 20px;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 10px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+    width: 100%;
+    color: #232222;
+    }
+    input[type=submit], .view_roles{
+    background-color: blueviolet;
+    color: #fff;
+    font-size: 16px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    }
+    input[type=submit]:hover, .view_roles:hover{
+    background-color: blueviolet;
+    }
+    ::placeholder {
+    color: #ccc;
+    }
+    p {
+        font-size: 16px;
+        color: #333;
+        line-height: 1.5;
+        margin-bottom: 10px;
+        align-content: center;
+    }
+    ol {
+        font-size: 16px;
+        color: #333;
+        line-height: 1.5;
+        margin-bottom: 10px;
+    }
+    .custom-file-upload {
+  display: inline-block;
+  padding: 6px 12px;
+  cursor: pointer;
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.custom-file-upload span {
+  margin-right: 10px;
+}
+
+.custom-file-upload input[type="file"] {
+  display: none;
+}
+
+</style>
+</head>
+<body>
+{% include 'component_navigationBar.html' %}
+
+
+ <div class="container">
+    <div class="row align-items-center">
+        <div class="col-md-3" style="display: flex; justify-content: center;">
+            <img src="../static/images/index/Be_Creator.png" alt="1" class="img-fluid" style="margin: auto;"/>
+        </div>
+        <div class="col-md-9 p-5">
+
+            <form id="add_role_form" action="/user_add_spl_role" method="POST" enctype="multipart/form-data">1.AI avatar：
+                <div class="custom-file-upload">
+                    <span id="file-name">Upload a picture</span>
+                    <input type="file" id="file" name="file">
+                </div>
+                <br>
+                <br>
+                2.AI name：A name for the AI service
+                    <input type="text" name="chineseName" id="SPLName" value="{{ SPLName }}">
+                3.AI category：Click to select the category of AI
+                <select class="form-select" id="sel1" name="category">
+                          <option>general</option>
+                          <option>entertainment</option>
+                          <option>counselor</option>
+                          <option>efficiency</option>
+                          <option>education</option>
+                    </select>
+                4.AI introduce：What can be done for users, how users use it.
+                     <textarea name="helloWord" rows="2" id="SPLPreInfo">{{ SPLPreInfo }}</textarea>
+                5.AI Prompt：Click the input box to go to Prompt Sapper editing
+                     <textarea name="prompt" id="spl_prompt" rows="4" readonly>{{ spl_prompt }}</textarea>
+                     <input type="hidden" name="spl_id" id="spl_id" value="{{ spl_id }}">
+                    <br>
+                    <input type="submit" id="submit" value="submit">
+                     <button class="view_roles" type="button" id="edit_spl_roles">Edit existing AI service</button>
+                     <span style="color: red">{{ error }}{{ success }}{{ status }}{{ statement }}</span>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal" id="spl_roles"  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit existing AI service</h5>
+      </div>
+
+      <div class="modal-body" id="spl_roles_status">
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="close-spl-status-modal" data-dismiss="modal">close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+    $(document).ready(function(){
+        
+        // 使用 JavaScript 添加点击事件监听
+document.getElementById('file-name').addEventListener('click', function() {
+  document.getElementById('file').click();
+});
+
+// 使用 JavaScript 添加文件选择器的事件监听
+document.getElementById('file').addEventListener('change', function() {
+  var fileName = this.value.split('\\').pop();
+  document.getElementById('file-name').innerHTML = fileName;
+});
+
+
+        console.log($('body').attr('id'));
+        // 绑定事件edit_spl_roles
+        $('#edit_spl_roles').click(function(){
+            // 显示模态框
+            $('#spl_roles').modal('show');
+            // 发送ajax请求，url:/user_view_own_roles
+            $.ajax({
+                url: '/user_view_spl_roles',
+                type: 'POST',
+                success: function(data) {
+                    // 清空模态框
+                    $('#spl_roles_status').empty();
+                    if (data === 'NULL') {
+                        $('#spl_roles_status').append('<p>您暂时未拥有通过审核的AI！<br><a href="https://www.promptsapper.tech/sappercommunity/workspace">Prompt Sapper</p>');
+                    } else {
+                        // 遍历data
+                        $.each(data, function (index, item) {
+                            $('#spl_roles_status').append('<p>角色：' + item.role_id + '</p><a href="https://www.promptsapper.tech/sappercommunity/workspace?SPLId=' + index + '" target="_blank">前往Prompt Sapper编辑'+ item.role_id +'</a><hr>');
+                        });
+                    }
+                }
+            });
+        });
+        $('#close-spl-status-modal').click(function(){
+            $('#spl_roles').modal('hide');
+        });
+
+
+        // 绑定事件add_role_form,提交前判断四个input是否为空，为空则阻止提交
+        $('#add_role_form').submit(function(){
+            // 获取四个input的值
+            var file = $('#file').val();
+            var role = $('input[name="role"]').val();
+            var Chinese = $('input[name="Chinese"]').val();
+            var prompt = $('input[name="prompt"]').val();
+            // 判断文件是否为图片类型
+            var fileType = file.substring(file.lastIndexOf('.') + 1).toLowerCase();
+            if (fileType !== 'png' && fileType !== 'jpg' && fileType !== 'jpeg') {
+                alert('请上传png,jpg,jpe图片！');
+                // 清空input file的值
+                $('#file').val('');
+                return false;
+            }
+            // 判断是否为空
+            if (file === '' || role === '' || Chinese === '' || prompt === ''){
+                alert('请确保所有字段都填写完整后，点击“添加”按钮提交表单。');
+                return false;
+            }
+
+            //判断var role = $('input[name="role"]').val();是否包含特殊字符,如果包含，阻止提交
+            var regEn = /[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]/im,
+                regCn = /[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im;
+            if(regEn.test(role) || regCn.test(role)) {
+                alert("AI 名字(字母)不能包含特殊字符.");
+                return false;
+            }
+            // 在表单前删除localstorage，再提交表单
+            localStorage.removeItem('spl_prompt');
+            localStorage.removeItem('spl_id');
+            localStorage.removeItem('SPLName');
+            localStorage.removeItem('SPLPreInfo');
+        });
+
+
+        // 给从sapper过来的用户填充表单
+        var spl_prompt_html = document.getElementById('spl_prompt').value;
+        var SPLPreInfo_html = document.getElementById('SPLPreInfo').value;
+        var SPLName_html = $('#SPLName').val();
+        // 获取id为spl_id的input的value
+        var spl_id_html = $('#spl_id').val();
+
+        // 如果spl_prompt_html和spl_id_html不为空，就存入local storage
+        if (spl_prompt_html !== '' && spl_id_html !== '' && spl_prompt_html !== null && spl_id_html !== null && spl_prompt_html !== undefined && spl_id_html !== undefined){
+            localStorage.setItem('spl_prompt', spl_prompt_html);
+            localStorage.setItem('spl_id', spl_id_html);
+            localStorage.setItem('SPLName', SPLName_html);
+            localStorage.setItem('SPLPreInfo', SPLPreInfo_html);
+            console.log(spl_prompt_html);
+            console.log(spl_id_html);
+            console.log(SPLName_html);
+            console.log(SPLPreInfo_html);
+        }else{
+            // 如果spl_prompt_html和spl_id_html为空，就从local storage中取出
+            spl_prompt_html = localStorage.getItem('spl_prompt');
+            spl_id_html = localStorage.getItem('spl_id');
+            SPLName_html = localStorage.getItem('SPLName');
+            SPLPreInfo_html = localStorage.getItem('SPLPreInfo');
+            console.log(spl_prompt_html);
+            console.log(spl_id_html);
+            console.log(SPLName_html);
+            console.log(SPLPreInfo_html);
+            // 如果spl_prompt_html和spl_id_html不为空(说明之前存过，否则就是没存过，为空)，就存入input
+            if (spl_prompt_html !== '' && spl_id_html !== '' && spl_prompt_html !== null && spl_id_html !== null){
+                document.getElementById('spl_prompt').value = spl_prompt_html;
+                document.getElementById('SPLPreInfo').value = SPLPreInfo_html;
+                $('#spl_id').val(spl_id_html);
+                $('#SPLName').val(SPLName_html);
+            }
+        }
+
+
+        $('#spl_prompt').click(function(){
+            spl_id_html = localStorage.getItem('spl_id');
+            if (spl_id_html !== '' && spl_id_html !== null && spl_id_html !== undefined){
+                window.open('https://www.promptsapper.tech/sappercommunity/workspace?SPLId=' + spl_id_html); // 打开新窗口
+            }else{
+                window.open('https://www.promptsapper.tech/sappercommunity/workspace'); // 打开新窗口
+            }
+        });
+
+    });
+</script>
+</body>
+</html>

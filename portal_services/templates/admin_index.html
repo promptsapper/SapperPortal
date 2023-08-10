@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" type="image/svg+xml" href="../static/images/icon/Portal_logo.png">
+    <title>Sapper Portal</title>
+<script src="../static/js/jquery.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      display: flex;
+      height: 100vh;
+    }
+
+    .column-1 {
+      width: 25%;
+      background-color: #f1f1f1;
+    }
+
+    .column-2 {
+      width: 75%;
+      background-color: #ddd;
+    }
+
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .button {
+      width: 80%;
+      height: 50px;
+      margin-bottom: 10px;
+      background-color: #ccc;
+      text-align: center;
+      line-height: 50px;
+    }
+
+    .button:hover {
+      background-color: #aaa;
+    }
+
+    a{
+        text-decoration: none;
+        color: #000;
+    }
+
+    .show_content {
+      padding: 20px;
+    }
+
+    .show_user {
+        max-height: 500px; /* 可自行调整 */
+        overflow-y: scroll;
+    }
+    .show_prompt {
+        max-height: 500px; /* 可自行调整 */
+        overflow-y: scroll;
+    }
+    .show_count {
+        max-height: 500px; /* 可自行调整 */
+        overflow-y: scroll;
+    }
+    h1 {
+        margin-top: 20px;
+      margin-bottom: 40px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #aaa;
+    }
+
+    th {
+      background-color: #f1f1f1;
+      font-weight: bold;
+    }
+    input {
+      width: 100px;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="column column-1">
+      <div class="buttons">
+        <a class="button" href="/show_user">用户管理</a>
+        <a class="button" href="/show_prompt">角色管理</a>
+        <a class="button" href="/show_count">角色计数</a>
+        <a class="button" href="/show_key">API_KEY</a>
+        <a class="button" href="/show_rewards">奖励管理</a>
+        <a class="button" href="/show_users_work_status">审核用户提交的角色</a>
+        <a class="button" href="/admin_login_out">退出登录</a>
+      </div>
+    </div>
+    <div class="column column-2">
+
+
+        <div class="show_content">
+            {% if show_users %}
+                {% include 'show_user.html' %}
+            {% endif %}
+
+            {% if show_prompts %}
+                {% include 'show_prompt.html' %}
+            {% endif %}
+
+            {% if show_counts %}
+                {% include 'show_count.html' %}
+            {% endif %}
+
+            {% if show_rewards %}
+                {% include 'show_rewards.html' %}
+            {% endif %}
+
+            {% if show_users_work_status %}
+                {% include 'show_users_work.html' %}
+            {% endif %}
+
+            {% if show_keys %}
+                {% include 'show_key.html' %}
+            {% endif %}
+        </div>
+    </div>
+  </div>
+</body>
+<script>
+// 找所有class为delete_role的按钮添加点击事件，点击后获取当前按钮的value，将其传输给后台/delete_role，传输的数据为'wanneng'
+var delete_role = document.getElementsByClassName('delete_role');
+for (var i = 0; i < delete_role.length; i++) {
+  delete_role[i].onclick = function() {
+    var role = this.value;
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/delete_role', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify({role: role}));
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        var res = JSON.parse(xhr.responseText);
+        if (res.code === 200) {
+          alert('删除成功');
+          window.location.reload();
+        } else {
+          alert('删除失败');
+        }
+      }
+    }
+  }
+}
+
+// 为id为edit_key的按钮添加点击事件，点击后获取id为key的th标签中的文本，将其传输给后台/edit_key，传输的数据为'sk-***'
+var edit_key = document.getElementById('edit_key');
+// 如果edit_key存在，就添加点击事件
+if (edit_key){
+edit_key.onclick = function() {
+  var key = document.getElementById('key').innerHTML;
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', '/edit_key', true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify({api_key: key}));
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      var res = JSON.parse(xhr.responseText);
+      if (res.code === 200) {
+        alert('修改成功');
+        window.location.reload();
+      } else {
+        alert('修改失败');
+      }
+    }
+  }
+}}
+
+
+// 找到class为edit的按钮
+var edit = document.getElementsByClassName('edit');
+if (edit) {
+// 点击edit按钮，在edit按钮后面添加一个 class="edit_submit" 的按钮，并将所有td变为可编辑状态
+    for (var i = 0; i < edit.length; i++) {
+        edit[i].onclick = function () {
+            var tr = this.parentNode.parentNode; // 获取当前行
+            var tds = tr.getElementsByTagName('td'); // 获取当前行的所有td
+            for (var j = 0; j < tds.length - 1; j++) { // 将所有td变为可编辑状态
+                tds[j].innerHTML = '<input type="text" value="' + tds[j].innerHTML + '">';
+            }
+            this.parentNode.innerHTML += '<button class="edit_submit">提交</button><button class="add_ten">+10</button><button class="add_thirty">+30</button><button class="add_fifty">+50</button>';
+            var edit_submit = document.getElementsByClassName('edit_submit');
+            for (var k = 0; k < edit_submit.length; k++) { // 为提交按钮添加点击事件,k<edit_submit.length,
+                edit_submit[k].onclick = function () {
+                    var tr = this.parentNode.parentNode;
+                    var tds = tr.getElementsByTagName('td');
+                    var data = {};
+                    for (var l = 0; l < tds.length - 1; l++) { // 将所有td变为可编辑状态
+                        data[tds[l].getAttribute('id')] = tds[l].getElementsByTagName('input')[0].value;
+                    }
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('POST', '/edit_user', true);
+                    xhr.setRequestHeader('Content-Type', 'application/json');
+                    xhr.send(JSON.stringify(data));
+                    xhr.onreadystatechange = function () {
+                        if (xhr.readyState === 4 && xhr.status === 200) {
+                            var res = JSON.parse(xhr.responseText);
+                            if (res.code === 200) {
+                                alert('修改成功');
+                                window.location.reload();
+                            } else {
+                                alert('修改失败');
+                            }
+                        }
+                    }
+                }
+
+            }
+            // 为+10添加点击事件,点击按钮后，将当前行的第三个th的value+10，只修改td的值，不发送请求
+            var add_ten = document.getElementsByClassName('add_ten');
+            for (var m = 0; m < add_ten.length; m++) {
+                add_ten[m].onclick = function () {
+                    var tr = this.parentNode.parentNode;
+                    var tds = tr.getElementsByTagName('td');
+                    var value = parseInt(tds[2].getElementsByTagName('input')[0].value);
+                    tds[2].getElementsByTagName('input')[0].value = value + 10;
+                }
+            }
+            // 为+30添加点击事件,点击按钮后，将当前行的第三个th的value+30，只修改td的值，不发送请求
+            var add_thirty = document.getElementsByClassName('add_thirty');
+            for (var n = 0; n < add_thirty.length; n++) {
+                add_thirty[n].onclick = function () {
+                    var tr = this.parentNode.parentNode;
+                    var tds = tr.getElementsByTagName('td');
+                    var value = parseInt(tds[2].getElementsByTagName('input')[0].value);
+                    tds[2].getElementsByTagName('input')[0].value = value + 30;
+                }
+            }
+            // 为+50添加点击事件,点击按钮后，将当前行的第三个th的value+50，只修改td的值，不发送请求
+            var add_fifty = document.getElementsByClassName('add_fifty');
+            for (var o = 0; o < add_fifty.length; o++) {
+                add_fifty[o].onclick = function () {
+                    var tr = this.parentNode.parentNode;
+                    var tds = tr.getElementsByTagName('td');
+                    var value = parseInt(tds[2].getElementsByTagName('input')[0].value);
+                    tds[2].getElementsByTagName('input')[0].value = value + 50;
+                }
+            }
+        }
+    }
+}
+// 找到class为back-user-work的按钮，点击按钮后，将id === back-user-work的按钮.value的的文本内容发送到后端url: /back_user_work
+var back_user_work = document.getElementsByClassName('back-user-work');
+if (back_user_work) {
+    for (var i = 0; i < back_user_work.length; i++) {
+        back_user_work[i].onclick = function () {
+            var user = this.value;
+            //console.log(user);
+            // 找到id为user的td，将其内容发送到后端
+            var user_td = document.getElementById(user);
+            //console.log(user_td.innerHTML)
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/back_user_work', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify({user: user, statement: user_td.innerHTML}));
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var res = JSON.parse(xhr.responseText);
+                    if (res.code === 200) {
+                        alert('修改成功');
+                        window.location.reload();
+                    } else {
+                        alert('修改失败');
+                    }
+                }
+            }
+        }
+    }
+}
+
+// 找到classs为edit_rewards的按钮，点击该按钮后，将和按钮在同一个tr下的所有th的文本内容发送到后端url: /edit_rewards
+var edit_rewards = document.getElementsByClassName('edit_rewards');
+if (edit_rewards) {
+    for (var i = 0; i < edit_rewards.length; i++) {
+        edit_rewards[i].onclick = function () {
+            var tr = this.parentNode.parentNode;
+            var tds = tr.getElementsByTagName('td');
+            var data = {};
+            for (var j = 0; j < tds.length - 1; j++) {
+                data[tds[j].getAttribute('id')] = tds[j].getElementsByTagName('input')[0].value;
+                // tds[j].getElementsByTagName('input')[0].value获取td下的所有input标签，再用[0]获取第一个input标签，再获取其value
+            }
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/edit_rewards', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify(data));
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var res = JSON.parse(xhr.responseText);
+                    if (res.code === 200) {
+                        // res = {'code': 200, 'exchange_count': exchange_count, 'exchange_money': exchange_money}
+                        alert('该次兑换的次数为' + res.exchange_count + '次\n'+'兑换的金额为' + res.exchange_money + '元\n'+'换算机制为:奖励的钱=兑换的次数*0.024');
+                        window.location.reload();
+                    } else {
+                        alert(res.msg);
+                    }
+                }
+            }
+        }
+    }
+}
+</script>
+</html>

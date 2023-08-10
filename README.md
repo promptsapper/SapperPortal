@@ -1,1 +1,30 @@
-# SapperPortal
+- 项目根目录
+    - portal_services  # 源代码目录
+        - forms  # 信息文件目录，里面全为json文件
+            - users_bill  # 每个用户在注册时都会新建一个账单文件，记录用户消费，login.py的register_check完成文件创建
+                - 182****2222.json
+            - 其它json文件
+        - services  # 包括flask路由中用到的逻辑处理文件
+            - (.py)文件
+        - static  # 静态文件目录，网页中用到的css、js、图片等文件
+            - css
+            - font  # 字体
+            - js
+            - images
+                - icon  # 图标，logo
+                - index  # 首页图片
+                - role  # 角色图片，角色选择页面中的图片
+                - 其它图片
+        - templates  # 网页模板目录，html文件
+            - (.html)文件
+        - views  # 所有视图，路由生成代码。会从services中导入逻辑处理文件(.py)
+            - url_admin.py  # 管理员路由，所有管理员相关的路由都在这里
+            - url_chat.py  # 用户选择角色后聊天的所有内容
+            - url_create.py  # 用户创建角色的所有内容
+            - url_history.py  # 用户查看历史记录的所有内容
+            - url_login_register.py  # 处理用户登录注册
+            - url_role_select.py  # 处理用户选择(点击)角色图片
+            - url_user_balance.py  # 处理用户查询余额，账单的
+        - __init__.py  # 初始化文件，集成portal_services中的所有文件，供app.py调用
+    - app.py  # 项目运行文件
+    - README.md  # 项目说明文档

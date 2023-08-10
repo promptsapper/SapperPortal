@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="keywords" content="Sapper, AI">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="../static/images/icon/Portal_logo.png">
+    <title>Sapper Portal</title>
+    <link rel="stylesheet" href="../static/css/v5.2.3_bootstrap.min.css" />
+    <style>
+        @media (min-width: 768px) {
+            .news-input{
+                width: 50%;
+            }
+        }
+
+        .navbar{
+            margin-bottom: 1%;
+        }
+
+        body::before{
+            display: block;
+            content: '';
+            height: 56px;
+        }
+    </style>
+    </head>
+    <body>
+       {% if login_status == False %}
+            {% include 'navigationBar2.html' %}
+        {% elif login_status == True %}
+            {% include 'component_navigationBar.html' %}
+        {% endif %}
+
+        <section class="p-5 bg-dark text-light text-center text-sm-start" >
+            <!--padding -->
+            <div class="container" style="margin-top: 5vh;">
+                <div class="d-flex">
+                    <!--display flex-->
+                    <div>
+                        <h1>
+                            Welcome to<span class="text-warning">Sapper Portal</span>
+                        </h1>
+                        <p class="my-4" >
+                            <!-- margin-top margin-bottom -->
+                            Here, you'll start conversations with a variety of AI-native services and explore a variety of exciting communication experiences. Sapper Portal brings together many AI-native services, including universal assistant, health advisor, legal advisor, programmer, travel advisor, virtual boyfriend, virtual girlfriend, universal mentor, horoscope master, and more. Whether you need to gain knowledge, solve problems, be entertained or find inspiration, our AI-native services will provide you with a professional, personalized service.
+                        </p>
+                        <button class="btn btn-primary btn-lg">
+                            <a href="/roleSelect " style="text-decoration: none; color: inherit; cursor: pointer;">Try it</a>
+                        </button>
+                        <button class="btn btn-primary btn-lg">
+                            <a href="/create_spl_role" style="text-decoration: none; color: inherit; cursor: pointer;">Start creating</a>
+                        </button>
+                    </div>
+                    <img
+                        src="../static/images/index/showcase.svg"
+                        alt="showcase"
+                        class="w-50 d-none d-md-block"
+                    />
+                </div>
+            </div>
+        </section>
+
+        <!--<section class="p-5">-->
+        <!--    <div class="container">-->
+        <!--        <div class="row align-items-center justify-content-between">-->
+        <!--            <div class="col-md p-5">-->
+        <!--                <h2>AI Chain</h2>-->
+        <!--                <br>-->
+        <!--                <p>-->
+        <!--                    The revolution in artificial intelligence and software engineering has created unprecedented opportunities and demands for unlimited innovative breakthroughs. The current popularity of chatbots and text-to-image creation is just the tip of this revolution. To cope with AI 2.0 and software 3.0, we need more than just flashy tips, but a democratized, accessible AI software engineering infrastructure that allows everyone to participate in and truly benefit from AI. chain is a new capability unlocked by the foundational model that provides a flexible and generic foundation for combining new AI systems where people can focus on the "what to do", that is, analyzing task workflows and data characteristics, and designing human-AI interactions through natural language, rather than focusing on the "how to do", that is, data structures, algorithms, algorithms, etc. API calls, data labeling, and model training.-->
+        <!--                </p>-->
+        <!--                <button class="btn btn-primary btn-lg">-->
+        <!--                    <a href="https://www.aichain.online/" style="text-decoration: none; color: inherit; cursor: pointer;" target="_blank">Explore AI Chain</a>-->
+        <!--                </button>-->
+        <!--            </div>-->
+        <!--            <br>-->
+        <!--            <div class="col-md">-->
+        <!--                <img src="../static/images/index/AIChain.png" alt="1" class="img-fluid" style="border-radius: 3vh;border: 3px solid #666666;"/>-->
+        <!--            </div>-->
+        <!--        </div>-->
+        <!--    </div>-->
+        <!--</section>-->
+
+        <footer class="p-5 bg-dark text-white text-center">
+            <div class="container">
+            </div>
+        </footer>
+    <script src="../static/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    </body>
+</html>
